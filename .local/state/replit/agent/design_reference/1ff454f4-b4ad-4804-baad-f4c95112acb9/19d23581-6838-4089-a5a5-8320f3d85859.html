@@ -1,0 +1,610 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SatTrack Pro - Enhanced Satellite Tracking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'space': {
+                            50: '#F8FAFC',
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#334155',
+                            600: '#475569',
+                            500: '#64748B',
+                        },
+                        'electric': {
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .satellite-orbit {
+            animation: orbit 20s linear infinite;
+        }
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .grid-dots {
+            background-image: radial-gradient(circle, #64748B 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-space-900 via-space-800 to-space-700 min-h-screen text-white">
+
+    <!-- @COMPONENT: NavigationHeader -->
+    <header class="glass-effect border-b border-space-700/50 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-electric-500 to-electric-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-satellite text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-space-900">SatTrack Pro</h1>
+                            <p class="text-sm text-space-600">Enhanced Satellite Tracking</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#dashboard" class="text-space-900 hover:text-electric-600 transition-colors font-medium">Dashboard</a>
+                    <a href="#tracking" class="text-space-600 hover:text-electric-600 transition-colors font-medium">Live Tracking</a>
+                    <a href="#validation" class="text-space-600 hover:text-electric-600 transition-colors font-medium">Validation</a>
+                    <a href="#api" class="text-space-600 hover:text-electric-600 transition-colors font-medium">API</a>
+                    <a href="#settings" class="text-space-600 hover:text-electric-600 transition-colors font-medium">Settings</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <!-- @STATE: isConnected:boolean = true -->
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse-slow"></div>
+                        <span class="text-sm text-space-600">Live</span>
+                    </div>
+                    
+                    <button class="md:hidden text-space-600 hover:text-space-900">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: NavigationHeader -->
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- @COMPONENT: StatusOverview -->
+        <section class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-space-600 text-sm font-medium">Tracked Satellites</p>
+                            <p class="text-2xl font-bold text-space-900" data-bind="stats.totalSatellites">23,847</p>
+                        </div>
+                        <div class="w-12 h-12 bg-electric-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-satellite text-electric-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <span class="text-green-600 text-sm font-medium">+142</span>
+                        <span class="text-space-500 text-sm ml-2">new today</span>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-space-600 text-sm font-medium">Avg Accuracy</p>
+                            <p class="text-2xl font-bold text-space-900" data-bind="stats.avgAccuracy">247m</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-crosshairs text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <span class="text-green-600 text-sm font-medium">↓ 23%</span>
+                        <span class="text-space-500 text-sm ml-2">vs TLE baseline</span>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-space-600 text-sm font-medium">Space Weather</p>
+                            <p class="text-2xl font-bold text-space-900" data-bind="weather.kpIndex">Kp: 3.2</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-sun text-yellow-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <span class="text-yellow-600 text-sm font-medium" data-bind="weather.status">Moderate</span>
+                        <span class="text-space-500 text-sm ml-2">F10.7: 142.3</span>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-space-600 text-sm font-medium">API Calls Today</p>
+                            <p class="text-2xl font-bold text-space-900" data-bind="api.callsToday">8,432</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-code text-purple-600"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <span class="text-green-600 text-sm font-medium">98.7%</span>
+                        <span class="text-space-500 text-sm ml-2">uptime</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- @END_COMPONENT: StatusOverview -->
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            
+            <!-- @COMPONENT: LiveTrackingPanel -->
+            <div class="lg:col-span-2">
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-space-900">Live Satellite Tracking</h2>
+                        <div class="flex items-center space-x-4">
+                            <select class="bg-white border border-space-300 rounded-lg px-3 py-2 text-sm text-space-700" data-implementation="Satellite filter dropdown">
+                                <option>All Satellites</option>
+                                <option>LEO (< 2000km)</option>
+                                <option>MEO (2000-35786km)</option>
+                                <option>GEO (35786km)</option>
+                            </select>
+                            <button class="bg-electric-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-electric-700 transition-colors">
+                                <i class="fas fa-refresh mr-2"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3D Visualization Container -->
+                    <div class="relative bg-gradient-to-b from-space-900 to-space-800 rounded-lg h-96 overflow-hidden grid-dots">
+                        <!-- @FUNCTIONALITY: This should implement a 3D Earth visualization with real satellite positions using Three.js or similar -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <!-- Earth representation -->
+                            <div class="relative w-32 h-32 bg-gradient-to-br from-blue-500 to-green-500 rounded-full shadow-2xl animate-float">
+                                <!-- Continental outlines could go here -->
+                                <div class="absolute top-6 left-8 w-3 h-2 bg-green-400 rounded opacity-60"></div>
+                                <div class="absolute bottom-8 right-6 w-4 h-3 bg-green-400 rounded opacity-60"></div>
+                            </div>
+                            
+                            <!-- Satellite orbits -->
+                            <!-- @MAP: trackedSatellites.map(satellite => ( -->
+                            <div class="absolute inset-0 satellite-orbit">
+                                <div class="absolute top-10 left-1/2 transform -translate-x-1/2">
+                                    <div class="w-2 h-2 bg-electric-400 rounded-full shadow-lg">
+                                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-electric-300 whitespace-nowrap">ISS</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- @END_MAP -->
+                            
+                            <div class="absolute inset-0 satellite-orbit" style="animation-duration: 15s;">
+                                <div class="absolute bottom-16 right-1/4">
+                                    <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full shadow-lg">
+                                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-yellow-300 whitespace-nowrap">NOAA-18</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accuracy overlay -->
+                        <div class="absolute top-4 right-4 glass-effect rounded-lg p-3">
+                            <div class="text-sm text-space-600 mb-1">Current View Accuracy</div>
+                            <div class="text-lg font-bold text-green-400">< 300m</div>
+                        </div>
+
+                        <!-- Control overlay -->
+                        <div class="absolute bottom-4 left-4 flex space-x-2">
+                            <button class="glass-effect rounded-lg p-2 hover:bg-white/20 transition-colors" title="Zoom In">
+                                <i class="fas fa-plus text-white"></i>
+                            </button>
+                            <button class="glass-effect rounded-lg p-2 hover:bg-white/20 transition-colors" title="Zoom Out">
+                                <i class="fas fa-minus text-white"></i>
+                            </button>
+                            <button class="glass-effect rounded-lg p-2 hover:bg-white/20 transition-colors" title="Reset View">
+                                <i class="fas fa-home text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Satellite details table -->
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-space-900 mb-4">Active Tracking</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-space-200">
+                                        <th class="text-left py-2 text-sm font-medium text-space-600">Satellite</th>
+                                        <th class="text-left py-2 text-sm font-medium text-space-600">Altitude</th>
+                                        <th class="text-left py-2 text-sm font-medium text-space-600">Accuracy</th>
+                                        <th class="text-left py-2 text-sm font-medium text-space-600">Last Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- @MAP: selectedSatellites.map(satellite => ( -->
+                                    <tr class="border-b border-space-100 hover:bg-space-50/50 transition-colors" data-mock="true">
+                                        <td class="py-3">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-2 h-2 bg-electric-400 rounded-full"></div>
+                                                <span class="font-medium text-space-900">ISS (ZARYA)</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 text-space-600">408.2 km</td>
+                                        <td class="py-3">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">±187m</span>
+                                        </td>
+                                        <td class="py-3 text-space-600">2 min ago</td>
+                                    </tr>
+                                    <tr class="border-b border-space-100 hover:bg-space-50/50 transition-colors" data-mock="true">
+                                        <td class="py-3">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                                <span class="font-medium text-space-900">NOAA-18</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 text-space-600">854.1 km</td>
+                                        <td class="py-3">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">±243m</span>
+                                        </td>
+                                        <td class="py-3 text-space-600">5 min ago</td>
+                                    </tr>
+                                    <!-- @END_MAP -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: LiveTrackingPanel -->
+
+            <!-- @COMPONENT: SpaceWeatherPanel -->
+            <div>
+                <div class="glass-effect rounded-xl p-6 mb-6">
+                    <h2 class="text-xl font-bold text-space-900 mb-4">Space Weather Status</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-space-600">Solar Flux (F10.7)</span>
+                            <span class="font-semibold text-space-900" data-bind="weather.solarFlux">142.3</span>
+                        </div>
+                        <div class="w-full bg-space-200 rounded-full h-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-space-600">Geomagnetic (Kp)</span>
+                            <span class="font-semibold text-space-900" data-bind="weather.kpIndex">3.2</span>
+                        </div>
+                        <div class="w-full bg-space-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 32%"></div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-space-600">Dst Index</span>
+                            <span class="font-semibold text-space-900" data-bind="weather.dstIndex">-24 nT</span>
+                        </div>
+                        <div class="w-full bg-space-200 rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                            <span class="text-sm text-yellow-800">Moderate geomagnetic activity expected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-space-900 mb-4">System Performance</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-space-600">TLE Processing</span>
+                                <span class="text-sm font-medium text-green-600">Optimal</span>
+                            </div>
+                            <div class="w-full bg-space-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 97%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-space-600">Kalman Filter</span>
+                                <span class="text-sm font-medium text-green-600">Running</span>
+                            </div>
+                            <div class="w-full bg-space-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 94%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-space-600">NRLMSISE-00 Model</span>
+                                <span class="text-sm font-medium text-green-600">Active</span>
+                            </div>
+                            <div class="w-full bg-space-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 89%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-space-900" data-bind="performance.uptime">99.7%</div>
+                            <div class="text-xs text-space-600">System Uptime</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-space-900" data-bind="performance.latency">2.3s</div>
+                            <div class="text-xs text-space-600">Avg Response</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: SpaceWeatherPanel -->
+        </div>
+
+        <!-- @COMPONENT: ValidationAndAPI -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            
+            <div class="glass-effect rounded-xl p-6">
+                <h2 class="text-xl font-bold text-space-900 mb-4">Accuracy Validation</h2>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-space-600">Validation against Precise Ephemerides</span>
+                        <span class="text-sm font-medium text-green-600">Active</span>
+                    </div>
+                    <div class="bg-space-50 rounded-lg p-4">
+                        <div class="text-sm text-space-600 mb-2">Recent Validation Results:</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-sm text-space-700">ISS vs NASA SP ephemeris:</span>
+                                <span class="text-sm font-medium text-green-600">±187m (98.2% improvement)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-space-700">GPS satellites vs IGS:</span>
+                                <span class="text-sm font-medium text-green-600">±156m (97.8% improvement)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-space-700">Sentinel-1A vs ESA OEM:</span>
+                                <span class="text-sm font-medium text-green-600">±293m (95.1% improvement)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center p-3 bg-green-50 rounded-lg">
+                        <div class="text-lg font-bold text-green-600" data-bind="validation.subThreeHundred">87%</div>
+                        <div class="text-xs text-green-600">< 300m accuracy</div>
+                    </div>
+                    <div class="text-center p-3 bg-blue-50 rounded-lg">
+                        <div class="text-lg font-bold text-blue-600" data-bind="validation.avgImprovement">96.4%</div>
+                        <div class="text-xs text-blue-600">Avg improvement</div>
+                    </div>
+                    <div class="text-center p-3 bg-purple-50 rounded-lg">
+                        <div class="text-lg font-bold text-purple-600" data-bind="validation.validatedSats">1,247</div>
+                        <div class="text-xs text-purple-600">Validated satellites</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-xl p-6">
+                <h2 class="text-xl font-bold text-space-900 mb-4">API Access</h2>
+                
+                <div class="mb-4">
+                    <h3 class="text-sm font-medium text-space-700 mb-2">Available Endpoints:</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-mono">GET</span>
+                            <code class="text-space-600">/api/v1/satellite/{id}/position</code>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-mono">GET</span>
+                            <code class="text-space-600">/api/v1/satellites/enhanced</code>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-mono">GET</span>
+                            <code class="text-space-600">/api/v1/accuracy/validation</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-sm font-medium text-space-700 mb-2">Sample Response:</h3>
+                    <div class="bg-space-50 rounded-lg p-3 text-xs font-mono overflow-x-auto">
+                        <pre class="text-space-600">{
+  "satellite_id": "25544",
+  "name": "ISS (ZARYA)",
+  "position": {
+    "latitude": 45.3621,
+    "longitude": -122.7891,
+    "altitude": 408.2
+  },
+  "accuracy": {
+    "estimated_error": "±187m",
+    "confidence": 98.2,
+    "method": "Enhanced+Kalman"
+  },
+  "timestamp": "2024-01-15T10:30:00Z"
+}</pre>
+                    </div>
+                </div>
+
+                <button class="w-full bg-electric-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-electric-700 transition-colors">
+                    <i class="fas fa-key mr-2"></i>Generate API Key
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ValidationAndAPI -->
+
+        <!-- @COMPONENT: CredentialsSetup -->
+        <div class="glass-effect rounded-xl p-6">
+            <h2 class="text-xl font-bold text-space-900 mb-4">System Configuration</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-space-900 mb-4">Space-Track.org Integration</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-space-700 mb-2">Username</label>
+                            <input type="text" class="w-full px-3 py-2 border border-space-300 rounded-lg focus:ring-2 focus:ring-electric-500 focus:border-electric-500" placeholder="Your Space-Track username" data-implementation="Store encrypted credentials" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-space-700 mb-2">Password</label>
+                            <input type="password" class="w-full px-3 py-2 border border-space-300 rounded-lg focus:ring-2 focus:ring-electric-500 focus:border-electric-500" placeholder="Your Space-Track password" data-implementation="Store encrypted credentials" />
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <span class="text-sm text-space-600">Not Connected</span>
+                        </div>
+                        
+                        <button class="bg-electric-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-electric-700 transition-colors">
+                            <i class="fas fa-plug mr-2"></i>Test Connection
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-space-900 mb-4">Data Sources Configuration</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-space-50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-space-900">NOAA SWPC</div>
+                                <div class="text-sm text-space-600">Space weather data</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-sm text-green-600">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-space-50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-space-900">NRLMSISE-00</div>
+                                <div class="text-sm text-space-600">Atmospheric density model</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-sm text-green-600">Running</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-space-50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-space-900">EGM96 Gravity Model</div>
+                                <div class="text-sm text-space-600">High-order Earth gravity</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-sm text-green-600">Loaded</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <button class="w-full bg-space-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-space-700 transition-colors">
+                                <i class="fas fa-cog mr-2"></i>Advanced Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: CredentialsSetup -->
+
+    </main>
+
+    <script>
+        // TODO: Implement business logic, API calls, or state management
+        
+        (function() {
+            // Simulate real-time updates
+            function updateLiveData() {
+                const elements = document.querySelectorAll('[data-bind]');
+                // TODO: Replace with actual API calls to fetch real satellite data
+                console.log('Updating live satellite tracking data...');
+            }
+
+            function initializeVisualization() {
+                // TODO: Initialize Three.js or similar 3D visualization library
+                // TODO: Load Earth model and satellite orbital data
+                // TODO: Implement real-time satellite position updates
+                console.log('3D visualization initialization placeholder');
+            }
+
+            function validateCredentials() {
+                // TODO: Implement Space-Track.org API authentication
+                // TODO: Test connection and display status
+                console.log('Credential validation placeholder');
+            }
+
+            // Initialize the application
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeVisualization();
+                updateLiveData();
+                
+                // Update data every 30 seconds
+                setInterval(updateLiveData, 30000);
+            });
+
+            // Add event listeners for interactive elements
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('[data-event*="click"]')) {
+                    const action = e.target.getAttribute('data-event').split(':')[1];
+                    console.log(`Action triggered: ${action}`);
+                    // TODO: Implement specific click handlers
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

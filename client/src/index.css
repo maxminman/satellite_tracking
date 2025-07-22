@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+
+  /* Custom colors for space theme */
+  --space-50: hsl(218, 31%, 98%);
+  --space-100: hsl(218, 27%, 94%);
+  --space-200: hsl(218, 11%, 85%);
+  --space-300: hsl(218, 11%, 75%);
+  --space-400: hsl(218, 9%, 61%);
+  --space-500: hsl(220, 9%, 46%);
+  --space-600: hsl(215, 14%, 34%);
+  --space-700: hsl(217, 19%, 27%);
+  --space-800: hsl(222, 47%, 11%);
+  --space-900: hsl(224, 71%, 4%);
+
+  --electric-400: hsl(208, 100%, 64%);
+  --electric-500: hsl(207, 90%, 54%);
+  --electric-600: hsl(208, 79%, 51%);
+  --electric-700: hsl(221, 83%, 53%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    background: rgba(248, 250, 252, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .space-50 { @apply text-[hsl(var(--space-50))]; }
+  .space-100 { @apply text-[hsl(var(--space-100))]; }
+  .space-200 { @apply text-[hsl(var(--space-200))]; }
+  .space-300 { @apply text-[hsl(var(--space-300))]; }
+  .space-400 { @apply text-[hsl(var(--space-400))]; }
+  .space-500 { @apply text-[hsl(var(--space-500))]; }
+  .space-600 { @apply text-[hsl(var(--space-600))]; }
+  .space-700 { @apply text-[hsl(var(--space-700))]; }
+  .space-800 { @apply text-[hsl(var(--space-800))]; }
+  .space-900 { @apply text-[hsl(var(--space-900))]; }
+
+  .bg-space-50 { background-color: hsl(var(--space-50)); }
+  .bg-space-100 { background-color: hsl(var(--space-100)); }
+  .bg-space-200 { background-color: hsl(var(--space-200)); }
+  .bg-space-300 { background-color: hsl(var(--space-300)); }
+  .bg-space-400 { background-color: hsl(var(--space-400)); }
+  .bg-space-500 { background-color: hsl(var(--space-500)); }
+  .bg-space-600 { background-color: hsl(var(--space-600)); }
+  .bg-space-700 { background-color: hsl(var(--space-700)); }
+  .bg-space-800 { background-color: hsl(var(--space-800)); }
+  .bg-space-900 { background-color: hsl(var(--space-900)); }
+
+  .electric-400 { @apply text-[hsl(var(--electric-400))]; }
+  .electric-500 { @apply text-[hsl(var(--electric-500))]; }
+  .electric-600 { @apply text-[hsl(var(--electric-600))]; }
+  .electric-700 { @apply text-[hsl(var(--electric-700))]; }
+
+  .bg-electric-400 { background-color: hsl(var(--electric-400)); }
+  .bg-electric-500 { background-color: hsl(var(--electric-500)); }
+  .bg-electric-600 { background-color: hsl(var(--electric-600)); }
+  .bg-electric-700 { background-color: hsl(var(--electric-700)); }
+
+  .bg-electric-100 { background-color: hsl(var(--electric-500), 0.1); }
+}
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .satellite-orbit {
+    animation: orbit 20s linear infinite;
+  }
+
+  @keyframes orbit {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .grid-dots {
+    background-image: radial-gradient(circle, hsl(var(--space-500)) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
